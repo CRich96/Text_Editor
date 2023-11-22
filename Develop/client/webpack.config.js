@@ -9,10 +9,12 @@ const { InjectManifest } = require('workbox-webpack-plugin');
 module.exports = () => {
   return {
     mode: 'development',
+    // Entry for files
     entry: {
       main: './src/js/index.js',
       install: './src/js/install.js'
     },
+    // Output to bundles
     output: {
       filename: '[name].bundle.js',
       path: path.resolve(__dirname, 'dist'),
@@ -22,8 +24,24 @@ module.exports = () => {
     ],
 
     module: {
+      // Add CSS loaders
       rules: [
-        
+        {
+          test: /\.css$/i,
+          use: ["style-loader", "css-loader"]
+        },
+        {
+          test: /\.m?js$/,
+          exclude: /node_modules/,
+          // Add babel-loader to webpack in order to use ES6
+          use: {
+            loader: "babel-loader",
+            options: {
+              presets: ["@babel/preset-env"],
+              plugins: ["@babel/plugin-proposal-object-rest-spread", "@babel/transform-runtime"]
+            }
+          }
+        }
       ],
     },
   };
